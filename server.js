@@ -30,21 +30,7 @@ app.get("/stats", (req, res) => {
   res.sendFile(path.join(__dirname, "./public/stats.html"));
 });
 
-app.get("/api/workouts", (req, res) => {
-  Workout.aggregate([
-    {
-      $addFields: {
-        totalDuration: { $sum: '$exercises.duration' }
-      }
-    }
-  ])
-    .then(result => {
-      res.json(result)
-    })
-    .catch(err => {
-      console.log(err)
-    })
-});
+
 
 app.post("/api/workouts", (req, res) => {
   Workout.create({})
@@ -67,6 +53,22 @@ app.put("/api/workouts/:id", (req, res) => {
     })
 });
 
+app.get("/api/workouts", (req, res) => {
+  Workout.aggregate([
+    {
+      $addFields: {
+        totalDuration: { $sum: '$exercises.duration' }
+      }
+    }
+  ])
+    .then(result => {
+      res.json(result)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+});
+
 app.get("/api/workouts/range", (req, res) => {
   Workout.aggregate([
     {
@@ -84,6 +86,8 @@ app.get("/api/workouts/range", (req, res) => {
       console.log(err)
     })
 });
+
+
 
 
 app.listen(PORT, () => {
